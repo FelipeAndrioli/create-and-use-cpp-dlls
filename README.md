@@ -2,11 +2,9 @@
 
 ## Exporting lib functions
 
-	To export a function from a dll, first we need to add the following code in it's beginning:
+To export a function from a dll, first we need to add the following code in it's beginning:
 
-		'''
-			__declspec(dllexport) function_type function_name...
-		'''
+	__declspec(dllexport) function_type function_name...
 
 ## Compiling
 
