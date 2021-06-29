@@ -3,7 +3,8 @@
 #include <stdlib.h>
 #include <windows.h>
 
-typedef int (__stdcall *f_funci)();
+typedef int (__stdcall *dll_sum_func)(int, int);
+typedef int (__stdcall *dll_multiply_func)(int, int);
 
 int main() {
 	
@@ -18,16 +19,18 @@ int main() {
 
 	std::cout << "Library loaded successfully" << std::endl;
 
-	f_funci funci = (f_funci)GetProcAddress(mydll, "funci");
+	dll_sum_func sum = (dll_sum_func)GetProcAddress(mydll, "sum");
+	dll_multiply_func multiply = (dll_multiply_func)GetProcAddress(mydll, "multiply");
 
 	std::cout << "Locating function" << std::endl;
 
-	if (!funci) {
+	if (!sum || !multiply) {
 		std::cout << "Could not locate the function" << std::endl;
 		return EXIT_FAILURE;
 	}
 
-	std::cout << "funci() returned " << funci() << std::endl;
+	std::cout << "sum() returned " << sum(1, 1) << std::endl;
+	std::cout << "multiply() returned " << multiply(5, 5) << std::endl;
 
 	return EXIT_SUCCESS;
 }
