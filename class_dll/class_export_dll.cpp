@@ -3,9 +3,10 @@
 
 class Calculation_Api {
     public:
-        void initialize();
-        int sum(int a, int b);
-        int multiply(int a, int b);
+        //virtual ~Calculation_Api();
+        virtual void initialize();
+        virtual int sum(int a, int b);
+        virtual int multiply(int a, int b);
 };
 
 void Calculation_Api::initialize() {
@@ -20,7 +21,12 @@ int Calculation_Api::multiply(int a, int b) {
     return a * b;
 }
 
-__declspec (dllexport) Calculation_Api* CreateAPI() {
-    Calculation_Api* calc_api = new Calculation_Api();
+class API: public Calculation_Api {
+
+};
+
+extern "C" __declspec (dllexport) Calculation_Api* CreateAPI() {
+    std::cout << "Creating API" << std::endl;
+    Calculation_Api* calc_api = new API();
     return calc_api;
 }
