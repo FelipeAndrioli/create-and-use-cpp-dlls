@@ -1,33 +1,40 @@
 #include <iostream>
+#include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <windows.h>
 
-typedef int (__stdcall *dll_create_api)();
+#include "interface.h"
+
+typedef void* (*VoidReturnFunc)();
+extern "C" __declspec(dllimport) void* __stdcall createClass();
 
 int main() {
 
-    HINSTANCE mydll = LoadLibraryA("class_export.dll");
+    HINSTANCE dll = LoadLibraryA("mylib.dll");
+    Interface* api;
+
+    VoidReturnFunc myFunc;
 
     std::cout << "Loading library" << std::endl;
 
-    if (!mydll) {
+    if (!dll) {
         std::cout << "Could not load the library" << std::endl;
         return EXIT_FAILURE;
     }
 
     std::cout << "Library loaded successfully" << std::endl;
 
-    dll_create_api create_api_function = (dll_create_api)GetProcAddress(mydll, "CreateAPI");
+    std::cout << "Looking for function to create class" << std::endl;
 
-    std::cout << "Locating function" << std::endl;
+    myFunc = (VoidReturnFunc)GetProcAddress(dll, "createClass");
 
-    if (!create_api_function) {
-        std::cout << "Could not locate the function" << std::endl;
+    if (!myFunc) {
+        std::cout << "Could not found function" << std::endl;
         return EXIT_FAILURE;
     }
 
-    std::cout << "create_api_function() " << create_api_function() << std::endl;
+    api = (Interface*) myFunc();
+    api->initialize();
 
     return EXIT_SUCCESS;
 }
