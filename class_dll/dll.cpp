@@ -1,16 +1,27 @@
 #include <iostream>
-#include <windows.h>
 
-#include "interface.h"
+#include "calc_api_interface.h"
 
-class CalcAPI : public Interface {
-    void initialize();
+class calc_api : public calc_api_interface {
+    public:
+        virtual void initialize();
+        virtual int sum(int a, int b);
+        virtual int multiply(int a, int b);
 };
 
-void CalcAPI::initialize() {
-    std::cout << "Initializing API" << std::endl;
+void calc_api::initialize() {
+    std::cout << "Initializing library" << std::endl;
 }
 
-extern "C" __declspec(dllexport) void* __stdcall createClass() {
-    return static_cast<void*>(new CalcAPI);
+int calc_api::sum(int a, int b) {
+    return a + b;
+}
+
+int calc_api::multiply(int a, int b) {
+    return a * b;
+}
+
+extern "C" calc_api_interface* getDllClass() {
+    static calc_api instance;
+    return &instance;
 }
